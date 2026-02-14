@@ -1,3 +1,6 @@
 mod cpu;
+mod display;
 
-fn main() {}
+fn main() {
+    display::run();
+}
