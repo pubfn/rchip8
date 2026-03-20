@@ -10,7 +10,7 @@ impl Display
     pub fn new() -> Self
     {
         Display {
-            pixels: [[true; 32]; 64],
+            pixels: [[false; 32]; 64],
         }
     }
 

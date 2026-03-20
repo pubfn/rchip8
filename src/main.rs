@@ -9,7 +9,7 @@ use raylib::prelude::*;
 use std::env;
 use std::fs;
 
-const INSTRUCTIONS_PER_FRAME: usize = 10;
+const INSTRUCTIONS_PER_FRAME: usize = 9;
 const CELL_SIZE: usize = 15;
 const SOUND_BYTES: &[u8] = include_bytes!("sound/perfection.wav");
 
