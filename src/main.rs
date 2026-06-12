@@ -27,7 +27,8 @@ fn main()
     unsafe {
         ffi::InitAudioDevice();
     };
-    let mut cpu = init_cpu(&rom);
+
+    let mut cpu = Cpu::new(&rom, Chip8Font::get());
     let mut display = Display::new();
 
     let (mut rl, thread) = raylib::init().size(960, 480).build();
@@ -64,15 +65,6 @@ fn main()
         cpu.timers_step();
         draw_screen(&display, &mut rl, &thread);
     }
-}
-
-fn init_cpu(rom: &[u8]) -> Cpu
-{
-    let mut cpu = Cpu::new();
-
-    cpu.load_to_memory(rom, Chip8Font::get());
-
-    cpu
 }
 
 fn draw_screen(display: &Display, rl: &mut RaylibHandle, thread: &RaylibThread)

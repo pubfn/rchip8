@@ -116,8 +116,10 @@ impl Cpu
 
             0x6 =>
             {
-                self.reg.registers[0xF] = self.reg.registers[x] & 0x1;
-                self.reg.registers[x] >>= 1;
+                let vy = self.reg.registers[y];
+
+                self.reg.registers[x] = vy >> 1;
+                self.reg.registers[0xF] = vy & 0x1;
             }
 
             0x7 =>
@@ -126,11 +128,12 @@ impl Cpu
                 self.reg.registers[x] = res;
                 self.reg.registers[0xF] = (!borrow) as u8;
             }
-
             0xE =>
             {
-                self.reg.registers[0xF] = (self.reg.registers[x] & 0x80) >> 7;
-                self.reg.registers[x] <<= 1;
+                let vy = self.reg.registers[y];
+
+                self.reg.registers[x] = vy << 1;
+                self.reg.registers[0xF] = (vy & 0x80) >> 7;
             }
 
             _ =>
@@ -176,11 +179,6 @@ impl Cpu
 
         let vx = self.reg.registers[x] as usize;
         let vy = self.reg.registers[y] as usize;
-
-        if self.reg.i as usize + height >= self.memory.len()
-        {
-            return;
-        }
 
         for row in 0..height
         {
@@ -266,10 +264,6 @@ impl Cpu
             0x33 =>
             {
                 let i = self.reg.i as usize;
-                if i + 2 >= self.memory.len()
-                {
-                    return;
-                }
 
                 let vx = self.reg.registers[x];
                 self.memory[i] = vx / 100;
@@ -280,10 +274,6 @@ impl Cpu
             0x55 =>
             {
                 let i = self.reg.i as usize;
-                if i + x >= self.memory.len()
-                {
-                    return;
-                }
 
                 for idx in 0..=x
                 {

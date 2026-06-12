@@ -32,8 +32,13 @@ pub struct Cpu
 
 impl Cpu
 {
-    pub fn new() -> Self
+    pub fn new(rom: &[u8], font: &[u8]) -> Self
     {
+        let mut memory = [0u8; 4096];
+
+        memory[0x50..0x50 + font.len()].copy_from_slice(font);
+        memory[0x200..0x200 + rom.len()].copy_from_slice(rom);
+
         Cpu {
             stack: Stack {
                 st: [0u16; 16],
@@ -45,14 +50,8 @@ impl Cpu
                 i: 0,
                 pc: 0x200,
             },
-            memory: [0u8; 4096],
+            memory,
         }
-    }
-
-    pub fn load_to_memory(&mut self, rom: &[u8], font: &[u8])
-    {
-        self.memory[0x50..0x50 + font.len()].copy_from_slice(font);
-        self.memory[0x200..0x200 + rom.len()].copy_from_slice(rom);
     }
 
     pub fn get_sound_timer(&self) -> u8
