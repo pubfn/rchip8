@@ -1,7 +1,6 @@
 mod instruction;
-use raylib::RaylibHandle;
 
-use crate::hardware::{display::Display, keyboard::Keyboard};
+use crate::hardware::display::Display;
 
 struct Stack
 {
@@ -65,7 +64,7 @@ impl Cpu
         self.timers.st = self.timers.st.saturating_sub(1);
     }
 
-    pub fn execute(&mut self, display: &mut Display, rl: &RaylibHandle)
+    pub fn execute<D: Display>(&mut self, display: &mut D, key: Option<usize>)
     {
         let byte1 = self.memory[self.reg.pc as usize];
         let byte2 = self.memory[(self.reg.pc + 1) as usize];
@@ -144,14 +143,12 @@ impl Cpu
 
             0xE =>
             {
-                let key = Keyboard::get_key(&rl);
                 self.groupE(opcode, key);
                 self.inc_pc();
             }
 
             0xF =>
             {
-                let key = Keyboard::get_key_pressed(&rl);
                 self.groupF(opcode, key);
                 self.inc_pc();
             }

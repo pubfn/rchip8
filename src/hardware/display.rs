@@ -1,31 +1,44 @@
-pub const CELL_SIZE: usize = 15;
+pub const WIDTH: usize = 64;
+pub const HEIGHT: usize = 32;
 
-pub struct Display
+pub struct Framebuffer
 {
-    pixels: [[bool; 32]; 64],
+    pixels: [[bool; HEIGHT]; WIDTH],
 }
 
-impl Display
+impl Framebuffer
 {
     pub fn new() -> Self
     {
-        Display {
-            pixels: [[false; 32]; 64],
+        Self {
+            pixels: [[false; HEIGHT]; WIDTH],
         }
     }
+}
 
-    pub fn get_pixel(&self, x: usize, y: usize) -> bool
+pub trait Display
+{
+    fn get_pixel(&self, x: usize, y: usize) -> bool;
+
+    fn set_pixel(&mut self, x: usize, y: usize, state: bool);
+
+    fn clear_display(&mut self);
+}
+
+impl Display for Framebuffer
+{
+    fn get_pixel(&self, x: usize, y: usize) -> bool
     {
         self.pixels[x][y]
     }
 
-    pub fn clear_display(&mut self)
-    {
-        self.pixels = [[false; 32]; 64];
-    }
-
-    pub fn set_pixel(&mut self, x: usize, y: usize, state: bool)
+    fn set_pixel(&mut self, x: usize, y: usize, state: bool)
     {
         self.pixels[x][y] = state;
+    }
+
+    fn clear_display(&mut self)
+    {
+        self.pixels = [[false; HEIGHT]; WIDTH];
     }
 }

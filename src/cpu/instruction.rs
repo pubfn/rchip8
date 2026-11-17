@@ -14,7 +14,7 @@ impl Cpu
         (x, y, kk, nnn)
     }
 
-    pub(super) fn group0(&mut self, opcode: u16, display: &mut Display)
+    pub(super) fn group0<D: Display>(&mut self, opcode: u16, display: &mut D)
     {
         match opcode
         {
@@ -170,7 +170,7 @@ impl Cpu
         self.reg.registers[x] = val & kk;
     }
 
-    pub(super) fn xD(&mut self, opcode: u16, display: &mut Display)
+    pub(super) fn xD<D: Display>(&mut self, opcode: u16, display: &mut D)
     {
         let (x, y, _, _) = Self::decode(opcode);
         let height = (opcode & 0x000F) as usize;

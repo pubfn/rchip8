@@ -1,4 +1,6 @@
 mod cpu;
+use crate::hardware::display::Framebuffer;
+use crate::hardware::keyboard::Keyboard;
 use raylib::ffi;
 use std::ffi::CString;
 mod hardware;
@@ -29,7 +31,7 @@ fn main()
     };
 
     let mut cpu = Cpu::new(&rom, Chip8Font::get());
-    let mut display = Display::new();
+    let mut display = Framebuffer::new();
 
     let (mut rl, thread) = raylib::init().size(960, 480).build();
 
@@ -43,9 +45,10 @@ fn main()
 
     while !rl.window_should_close()
     {
+        let key = Keyboard::get_key(&rl);
         for _ in 0..INSTRUCTIONS_PER_FRAME
         {
-            cpu.execute(&mut display, &rl);
+            cpu.execute(&mut display, key);
         }
 
         unsafe {
@@ -67,7 +70,7 @@ fn main()
     }
 }
 
-fn draw_screen(display: &Display, rl: &mut RaylibHandle, thread: &RaylibThread)
+fn draw_screen(display: &Framebuffer, rl: &mut RaylibHandle, thread: &RaylibThread)
 {
     rl.draw(thread, |mut d| {
         for i in 0..32
